@@ -1,0 +1,19 @@
+.chuck-add-or-edit-actions {
+  margin-top: 20px;
+  text-align: center;
+
+  .chuck-add-or-edit-actions {
+    width: 134px;
+    height: 45px !important;
+    font-size: 18px;
+
+    &.orange {
+      border-color: #f39800;
+      background-color: #f39800;
+    }
+  }
+}
+
+.chuck-add-or-edit-actions + .chuck-add-or-edit-actions {
+  margin-left: 60px;
+}

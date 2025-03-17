@@ -1,0 +1,29 @@
+@use 'sass:map';
+
+$bole-page-form-layout-v2: () !default;
+$bole-page-form-layout-v2: map.merge(
+  (
+    'padding-horizontal': 20px,
+  ),
+  $bole-page-form-layout-v2
+);
+
+$bole-jj-color: () !default;
+$bole-jj-color: map.merge(
+  (
+    'border-color': #e5e5e5,
+  ),
+  $bole-jj-color
+);
+
+$bole-jj-page: () !default;
+$bole-jj-page: map.merge(
+  (
+    'page-h': 32px,
+    'page-v': 24px,
+    'input-height': 40px,
+    'input-width': 384px,
+    'input-sm-width': 184px,
+  ),
+  $bole-jj-color
+);

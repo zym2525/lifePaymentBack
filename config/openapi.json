@@ -1,0 +1,9 @@
+{
+  "config": [
+    {
+      "requestLibPath": "import { request } from '@/utils/request'",
+      "schemaPath": "http://localhost:58190/swagger/v1/swagger.json",
+      "serversPath": "./src/services"
+    }
+  ]
+}

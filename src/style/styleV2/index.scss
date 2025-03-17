@@ -1,0 +1,8 @@
+@use '../common.scss' as *;
+@use './layout.scss';
+@use './var.scss' as *;
+
+:root {
+  @include bole-set-component-css-var('jj-color', $bole-jj-color);
+  @include bole-set-component-css-var('jj-page', $bole-jj-page);
+}

@@ -1,0 +1,15 @@
+.address {
+  .address-item {
+    margin-bottom: 10px;
+
+    .el-button {
+      margin-left: 10px;
+    }
+  }
+
+  :deep(.el-form-item__content) {
+    align-items: flex-start;
+    margin-bottom: -10px;
+    flex-direction: column;
+  }
+}

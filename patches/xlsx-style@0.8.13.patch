@@ -1,0 +1,70 @@
+diff --git a/dist/cpexcel.js b/dist/cpexcel.js
+index f821c7a56fab98ec4bc54624d2e15a4e7a922422..cbe7cbdd37257198c06df955a8b31c920d42f0c0 100644
+--- a/dist/cpexcel.js
++++ b/dist/cpexcel.js
+@@ -804,7 +804,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = cptable;
+   "use strict";
+   if(typeof cptable === "undefined") {
+     if(typeof require !== "undefined"){
+-      var cpt = require('./cpt' + 'able');
++      var cpt = cptable;
+       if (typeof module !== 'undefined' && module.exports) module.exports = factory(cpt);
+       else root.cptable = factory(cpt);
+     } else throw new Error("cptable not found");
+diff --git a/xlsx.js b/xlsx.js
+index 15b58b1f53ef0c4b6a3b7fa53dfe2bfe51c33f4d..084ba79564f51cdc560612fe8502cdcc2dabe7cd 100644
+--- a/xlsx.js
++++ b/xlsx.js
+@@ -5,7 +5,7 @@
+ var XLSX = {};
+ (function make_xlsx(XLSX){
+ XLSX.version = '0.8.11';
+-var current_codepage = 1200, current_cptable;
++var current_codepage = 1200, current_cptable, cptable;
+ if(typeof module !== "undefined" && typeof require !== 'undefined') {
+ 	if(typeof cptable === 'undefined') cptable = require('./dist/cpexcel');
+ 	current_cptable = cptable[current_codepage];
+@@ -1335,9 +1335,11 @@ var _fs, jszip;
+ if(typeof JSZip !== 'undefined') jszip = JSZip;
+ if (typeof exports !== 'undefined') {
+ 	if (typeof module !== 'undefined' && module.exports) {
+-		if(has_buf && typeof jszip === 'undefined') jszip = require('js'+'zip');
+-		if(typeof jszip === 'undefined') jszip = require('./js'+'zip').JSZip;
+-		_fs = require('f'+'s');
++		if(has_buf && typeof jszip === 'undefined') jszip = require('jszip');
++		if(typeof jszip === 'undefined') {
++			jszip = require('./jszip.js');
++		};
++		_fs = require('fs');
+ 	}
+ }
+ var attregexg=/([\w:]+)=((?:")([^"]*)(?:")|(?:')([^']*)(?:'))/g;
+@@ -11765,7 +11767,7 @@ function readFileSync(data, opts) {
+ }
+ function write_zip_type(wb, opts) {
+ 	var o = opts||{};
+-  style_builder  = new StyleBuilder(opts);
++	var style_builder  = new StyleBuilder(opts);
+ 
+   var z = write_zip(wb, o);
+ 	switch(o.type) {
+@@ -12062,7 +12064,7 @@ var XmlNode = (function () {
+     return this;
+   }
+ 
+-  var APOS = "'"; QUOTE = '"'
++  var APOS = "'"; var QUOTE = '"'
+   var ESCAPED_QUOTE = {  }
+   ESCAPED_QUOTE[QUOTE] = '&quot;'
+   ESCAPED_QUOTE[APOS] = '&apos;'
+@@ -12141,8 +12143,8 @@ var XmlNode = (function () {
+ 
+ 
+     // cache style specs to avoid excessive duplication
+-    _hashIndex = {};
+-    _listIndex = [];
++   	var _hashIndex = {};
++   	var _listIndex = [];
+ 
+     return {
+ 

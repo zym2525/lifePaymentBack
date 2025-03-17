@@ -1,0 +1,55 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "useDefineForClassFields": true,
+    "jsx": "preserve",
+    "jsxImportSource": "vue",
+
+    "noImplicitThis": true,
+    "isolatedModules": true,
+
+    "target": "ESNext",
+
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+
+    "strict": false,
+    "baseUrl": ".",
+    "allowJs": true,
+    "importsNotUsedAsValues": "preserve",
+    "preserveValueImports": false,
+    "resolveJsonModule": true,
+    "lib": ["dom", "esnext"],
+    "incremental": true,
+    "paths": {
+      "@/*": ["src/*"],
+      "@build/*": ["build/*"],
+      "@config/*": ["config/*"],
+      "@mock/*": ["mock/*"]
+      // "@bole-core/*": ["packages/*"]
+    },
+    "types": [
+      "node",
+      "vite/client",
+      "vite-svg-loader",
+      "element-plus/global",
+      "@bole-core/components/global"
+    ]
+    // "typeRoots": ["./node_modules/@types/", "./types"]
+  },
+  "include": [
+    "src/**/*.ts",
+    "build/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "types/**/*.d.ts",
+    "vite.config.ts",
+    "auto-imports.d.ts",
+    "components.d.ts",
+    "lib/vuedraggable/dist/vuedraggable.umd.js"
+  ],
+  "exclude": ["node_modules", "dist"]
+}
