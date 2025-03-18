@@ -12,11 +12,7 @@
           >
         </template>
       </ProTableQueryFilterBar>
-      <ProTableV2
-        v-bind="proTableProps"
-        :columns="channelColumns"
-        :operationBtns="channelOperationBtns"
-      >
+      <ProTableV2 v-bind="proTableProps" :columns="column" :operationBtns="operationBtns">
       </ProTableV2>
     </AppContainer>
     <AddOrEditLifePaymentChannelDialog v-bind="dialogProps" />
@@ -48,37 +44,34 @@ import {
   LifePayChannelsStatsEnumText,
   LifePayChannelsStatsEnum,
 } from '@/constants';
-import AddOrEditLifePaymentChannelDialog from './AddOrEditLifePaymentChannelDialog.vue';
+import AddOrEditLifePaymentChannelDialog from './components/AddOrEditLifePaymentChannelDialog.vue';
 
 defineOptions({
-  name: 'LifePaymentChannelManageView',
+  name: 'LifePaymentChannelManage',
 });
 
 const operationBtnMap: Record<string, OperationBtnType> = {
-  'channel-editBtn': { emits: { onClick: (role) => openDialog(role) } },
+  editBtn: { emits: { onClick: (role) => openDialog(role) } },
 
-  'channel-disabledBtn': {
+  disabledBtn: {
     emits: { onClick: (role) => setLifePayChannelsStatus(role) },
     props: { type: 'danger' },
     extraProps: {
       hide: (row: API.CreateEditPayChannelsInput) => row.status !== LifePayChannelsStatsEnum.启用,
     },
   },
-  'channel-enableBtn': {
+  enableBtn: {
     emits: { onClick: (role) => setLifePayChannelsStatus(role) },
     extraProps: {
       hide: (row) => row.status === LifePayChannelsStatsEnum.启用,
     },
   },
-  'channel-logBtn': { emits: { onClick: (role) => openLogDialog(role.id) } },
+  logBtn: { emits: { onClick: (role) => openLogDialog(role.id) } },
 };
 
 const { checkSubModuleItemShow, column, operationBtns } = useAccess({
   operationBtnMap,
 });
-
-const [channelColumns] = useGroupColumns(column, ['channel-']);
-const [channelOperationBtns] = useGroupOperationBtns(operationBtns, ['channel-']);
 
 const BaseState = {
   loading: true,

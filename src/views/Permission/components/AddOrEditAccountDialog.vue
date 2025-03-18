@@ -24,39 +24,6 @@
           enum-value-key="name"
         ></ProFormCheckbox>
       </ProFormItemV2>
-      <ProFormItemV2
-        label="所属公司:"
-        prop="companyOrgId"
-        :check-rules="[{ message: '请选择公司' }]"
-      >
-        <ProFormSelect
-          v-model="form.companyOrgId"
-          :valueEnum="sysOrgList"
-          enumLabelKey="orgName"
-          enum-value-key="id"
-          clearable
-          filterable
-          placeholder="请选择公司"
-          @change="changeCompany"
-        >
-        </ProFormSelect>
-      </ProFormItemV2>
-      <ProFormItemV2
-        label="所属部门:"
-        prop="departmentOrgId"
-        :check-rules="[{ message: '请选择部门' }]"
-      >
-        <ProFormSelect
-          v-model="form.departmentOrgId"
-          :valueEnum="allDepartmentList"
-          enumLabelKey="orgName"
-          enum-value-key="id"
-          clearable
-          filterable
-          placeholder="请选择部门"
-        >
-        </ProFormSelect>
-      </ProFormItemV2>
       <ProFormItemV2 label="备注:" prop="remark">
         <ProFormTextArea
           v-model="innerForm.remark"
@@ -88,7 +55,6 @@ import {
 } from '@bole-core/components';
 import { BoleRegExp } from '@bole-core/core';
 import { useAllRoleList } from '@/hooks/useUser';
-import { useSysOrgWithDepartmentCascader } from '@/hooks';
 
 defineOptions({
   name: 'AddOrEditAccountDialog',
@@ -104,19 +70,12 @@ type Props = {
     phoneNumber: string;
     remark: string;
     roleNames: string[];
-    companyOrgId: string;
-    departmentOrgId: string;
   };
 };
 const { allRoleList } = useAllRoleList();
 
 const props = withDefaults(defineProps<Props>(), {
   modelValue: false,
-});
-
-const { sysOrgList, allDepartmentList, changeCompany } = useSysOrgWithDepartmentCascader({
-  companyOrgId: toRef(props.form, 'companyOrgId'),
-  departmentOrgId: toRef(props.form, 'departmentOrgId'),
 });
 
 const emit = defineEmits<{

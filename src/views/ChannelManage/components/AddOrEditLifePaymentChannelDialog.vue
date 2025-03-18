@@ -76,7 +76,7 @@ import {
   LifePayChannlesTypeEnum,
   LifePayChannlesTypeEnumText,
 } from '@/constants';
-import { useLifePayRate } from '../hooks';
+import { useLifePayRate } from '@/hooks';
 
 defineOptions({
   name: 'AddOrEditLifePaymentChannelDialog',

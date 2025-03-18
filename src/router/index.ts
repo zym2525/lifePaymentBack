@@ -111,7 +111,6 @@ export const constantRoutes: Route[] = [
       },
     ],
   },
-  ...asyncRoutes,
   {
     path: '/Login',
     name: 'Login',

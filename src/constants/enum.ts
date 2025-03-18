@@ -148,3 +148,8 @@ export const DataRangeEnumText = {
   [DataRangeEnum.All]: '全部数据',
   [DataRangeEnum.Person]: '个人数据',
 };
+
+export enum AuthorizeType {
+  Role = 1,
+  User,
+}

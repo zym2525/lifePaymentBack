@@ -60,10 +60,10 @@ import {
 } from '@bole-core/components';
 import { LifePayRateTypeEnum } from '@/constants';
 import * as lifePayServices from '@/services/api/LifePay';
-import { useLifePayRate, DefaultSupplierRate } from '../hooks';
+import { useLifePayRate, DefaultSupplierRate } from '@/hooks';
 
 defineOptions({
-  name: 'LifePaymentRateManageView',
+  name: 'LifePaymentRateManage',
 });
 
 const form = reactive({

@@ -10,20 +10,13 @@
       <ProFormItemV2 label="角色名称" prop="name">
         <ProFormText placeholder="请输入角色名称" v-model.trim="innerForm.name"></ProFormText>
       </ProFormItemV2>
-      <!-- <ProFormItemV2 label="所属部门:" prop="departmentId">
-        <ProFormSelect
-          placeholder="请选择企业规模"
-          v-model="innerForm.departmentId"
-          :value-enum="DepartmentTypeText"
-        ></ProFormSelect>
-      </ProFormItemV2> -->
-      <ProFormItemV2 label="数据可见范围" prop="dataRange">
+      <!-- <ProFormItemV2 label="数据可见范围" prop="dataRange">
         <ProFormRadio
           v-model="innerForm.dataRange"
           :value-enum="DataRangeEnumText"
           :buttonStyle="false"
         ></ProFormRadio>
-      </ProFormItemV2>
+      </ProFormItemV2> -->
       <ProFormItemV2 label="备注:" prop="remark">
         <ProFormTextArea
           v-model="innerForm.remark"
@@ -52,7 +45,7 @@ import {
   ProFormRadio,
   ProFormTextArea,
 } from '@bole-core/components';
-import { DepartmentTypeText, DataRangeEnumText, DataRangeEnum } from '@/constants';
+import { DataRangeEnumText, DataRangeEnum } from '@/constants';
 
 defineOptions({
   name: 'AddOrEditRoleDialog',

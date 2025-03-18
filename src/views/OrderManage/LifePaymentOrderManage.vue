@@ -76,16 +76,12 @@
             @click="getLifePayOrderPageExport()"
             icon="Download"
             type="primary"
-            v-if="checkSubModuleItemShow('pageButton', 'order-exportBtn')"
+            v-if="checkSubModuleItemShow('pageButton', 'exportBtn')"
             >导出</el-button
           >
         </template>
       </ProTableQueryFilterBar>
-      <ProTableV2
-        v-bind="proTableProps"
-        :columns="orderColumns"
-        :operationBtns="orderOperationBtns"
-      >
+      <ProTableV2 v-bind="proTableProps" :columns="column" :operationBtns="operationBtns">
       </ProTableV2>
     </AppContainer>
     <OperateHistoryLogByTypeDialog v-bind="logDialogProps" />
@@ -109,14 +105,7 @@ import {
   bolePreview,
   SearchInput,
 } from '@bole-core/components';
-import {
-  OperateType,
-  useAccess,
-  useGroupColumns,
-  useGroupOperationBtns,
-  useOpenLogByTypeDialog,
-  useOpenLogDialog,
-} from '@/hooks';
+import { useAccess, useOpenLogByTypeDialog } from '@/hooks';
 import {
   LifePayStatusEnum,
   LifePayStatusEnumText,
@@ -133,16 +122,15 @@ import * as lifePayServices from '@/services/api/LifePay';
 import { Message, OrderInputType } from '@bole-core/core';
 import { format, omitByFalse, setOSSLink, downloadFile } from '@/utils';
 import { ModelValueType } from 'element-plus';
-import OperateHistoryLogDialog from '@/components/Dialog/OperateHistoryLogDialog.vue';
-import UploadRefundVoucher from './UploadRefundVoucher.vue';
+import UploadRefundVoucher from '../ServicesManage/components/UploadRefundVoucher.vue';
 import _ from 'lodash';
 
 defineOptions({
-  name: 'LifePaymentOrderManageView',
+  name: 'LifePaymentOrderManage',
 });
 
 const operationBtnMap: Record<string, OperationBtnType> = {
-  'order-voucherBtn': {
+  voucherBtn: {
     emits: { onClick: (role) => handleVoucher(role) },
     props: { type: 'danger' },
     extraProps: {
@@ -154,7 +142,7 @@ const operationBtnMap: Record<string, OperationBtnType> = {
         ),
     },
   },
-  'order-refundBtn': {
+  refundBtn: {
     emits: { onClick: (role) => handleRefund(role) },
     props: { type: 'danger' },
     extraProps: {
@@ -167,15 +155,12 @@ const operationBtnMap: Record<string, OperationBtnType> = {
         ),
     },
   },
-  'order-logBtn': { emits: { onClick: (role) => openLogDialog(role.id) } },
+  logBtn: { emits: { onClick: (role) => openLogDialog(role.id) } },
 };
 
 const { column, operationBtns, checkSubModuleItemShow } = useAccess({
   operationBtnMap,
 });
-
-const [orderColumns] = useGroupColumns(column, ['order-']);
-const [orderOperationBtns] = useGroupOperationBtns(operationBtns, ['order-']);
 
 const BaseState = {
   loading: true,

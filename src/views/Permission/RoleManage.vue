@@ -3,7 +3,6 @@
     <AppContainer>
       <ProTableQueryFilterBar @on-reset="reset">
         <template #query>
-          <!-- SearchInput如果需要 必须放在所有的query的最后面 -->
           <QueryFilterItem>
             <SearchInput
               v-model="extraParamState.queryCondition"
@@ -26,24 +25,11 @@
         </template>
       </ProTableQueryFilterBar>
       <ProTableV2 v-bind="proTableProps" :columns="column" :operationBtns="operationBtns">
-        <template #columns="{ row, column }">
-          <template v-if="column.property === 'dataRange'">
-            {{ DataRangeEnumText[row[column.property]] }}
-          </template>
-          <!-- <template v-else-if="column.property === 'isEnable'">
-            <FieldSwitch
-              active-text="启用"
-              inactive-text="禁用"
-              v-model="row.isEnable"
-              :before-change="() => roleEnableOrForbid(row)"
-            />
-          </template> -->
-        </template>
       </ProTableV2>
     </AppContainer>
     <AddOrEditRoleDialog v-bind="dialogProps" />
     <DialogAuthorize v-model:authorizeId="rowState.authorizeId" authorizeType="Role" />
-    <DialogMember v-model:visibleId="rowState.setMemberRoleId" />
+    <!-- <DialogMember v-model:visibleId="rowState.setMemberRoleId" /> -->
   </LoadingLayout>
 </template>
 
@@ -59,13 +45,13 @@ import {
   useTable,
   useFormDialog,
 } from '@bole-core/components';
-import { useAccess } from '@/hooks';
+import { useAccess, useAllRoleList } from '@/hooks';
 import * as userRoleServices from '@/services/api/UserRole';
 import { Message, OrderInputType } from '@bole-core/core';
 import AddOrEditRoleDialog from './components/AddOrEditRoleDialog.vue';
-import DialogAuthorize from './components/dialogAuthorize.vue';
-import DialogMember from './components/dialogMember.vue';
 import { DataRangeEnum, DataRangeEnumText } from '@/constants';
+import DialogAuthorize from './components/dialogAuthorize.vue';
+import { formatRoleName } from '@/utils';
 
 defineOptions({
   name: 'RoleManage',
@@ -75,17 +61,17 @@ const operationBtnMap: Record<string, OperationBtnType> = {
   editBtn: { emits: { onClick: (role) => openDialog(role) } },
   delBtn: { emits: { onClick: (role) => handleDeleteRole(role) }, props: { type: 'danger' } },
   authorize: { emits: { onClick: (role) => openAuthorizeDialog(role) } },
-  member: { emits: { onClick: (role) => openMemberDialog(role) } },
+  // member: { emits: { onClick: (role) => openMemberDialog(role) } },
   disabledBtn: {
     emits: { onClick: (role) => roleEnableOrForbid(role) },
     extraProps: {
-      hide: (row) => row.isLocked,
+      hide: (row) => row.isEnable,
     },
   },
   enableBtn: {
     emits: { onClick: (role) => roleEnableOrForbid(role) },
     extraProps: {
-      hide: (row) => !row.isLocked,
+      hide: (row) => !row.isEnable,
     },
   },
 };
@@ -93,6 +79,8 @@ const operationBtnMap: Record<string, OperationBtnType> = {
 const { checkSubModuleItemShow, column, operationBtns } = useAccess({
   operationBtnMap,
 });
+
+const { refetch } = useAllRoleList();
 
 const BaseState = {
   loading: true,
@@ -126,7 +114,10 @@ const {
         showLoading: !state.loading,
       });
       return {
-        data: res.data,
+        data: res.data.map((x) => ({
+          ...x,
+          name: formatRoleName(x.name),
+        })),
         pageModel: {
           rows: pageSize,
           page: pageIndex,
@@ -147,9 +138,8 @@ function openDialog(row?: API.RoleInfo) {
   if (row) {
     handleEdit({
       id: row.id,
-      name: row.name,
+      name: formatRoleName(row.name),
       remark: row.remark,
-      // departmentId: row.departmentId,
       dataRange: row.dataRange,
     });
   } else {
@@ -163,7 +153,6 @@ const { dialogProps, handleAdd, handleEdit, editForm, dialogState } = useFormDia
     id: '',
     name: '',
     remark: '',
-    // departmentId: DepartmentType.Market,
     dataRange: DataRangeEnum.All,
   },
 });
@@ -171,15 +160,14 @@ const { dialogProps, handleAdd, handleEdit, editForm, dialogState } = useFormDia
 async function handleAddOrEdit() {
   try {
     const isEdit = editForm.id;
-    let params: API.CreateBaseRoleInput = {
+    let params: API.CreateOrUpdateRoleInput = {
       name: editForm.name,
       remark: editForm.remark,
-      // departmentId: editForm.departmentId,
       dataRange: editForm.dataRange,
     };
     let res;
     if (isEdit) {
-      (params as API.CreateOrUpdateRoleInput).id = editForm.id;
+      params.id = editForm.id;
       res = await userRoleServices.updateRole(params);
     } else {
       res = await userRoleServices.createRole(params);
@@ -187,7 +175,7 @@ async function handleAddOrEdit() {
     if (res) {
       Message.successMessage('操作成功');
       getList(isEdit ? paginationState.pageIndex : 1);
-      dialogState.dialogVisible = false;
+      refetch({ type: 'inactive' });
     }
   } catch (error) {}
 }
@@ -202,13 +190,14 @@ async function handleDeleteRole(row: API.RoleInfo) {
     if (res) {
       Message.successMessage('操作成功');
       getList(paginationState.pageIndex);
+      refetch({ type: 'inactive' });
     }
   } catch (error) {}
 }
 
 async function roleEnableOrForbid(row: API.RoleInfo) {
   try {
-    await Message.tipMessage(`是否${!row.isEnable ? '启用' : '禁用'}用户`);
+    await Message.tipMessage(`是否${!row.isEnable ? '启用' : '禁用'}角色`);
     let res = await userRoleServices.roleEnableOrForbid({
       id: row.id,
       isEnable: !row.isEnable,
@@ -216,6 +205,7 @@ async function roleEnableOrForbid(row: API.RoleInfo) {
     if (res) {
       Message.successMessage('操作成功');
       getList(paginationState.pageIndex);
+      refetch({ type: 'inactive' });
       return !!res;
     }
   } catch (error) {}
@@ -228,9 +218,5 @@ const rowState = reactive({
 
 function openAuthorizeDialog(row: API.IdentityRoleDto) {
   rowState.authorizeId = row.id;
-}
-
-function openMemberDialog(row: API.IdentityRoleDto) {
-  rowState.setMemberRoleId = row.id;
 }
 </script>

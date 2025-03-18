@@ -96,7 +96,7 @@ export default ({ command, mode }: ConfigEnv): UserConfigExport => {
       __INTLIFY_PROD_DEVTOOLS__: false,
     },
     build: {
-      outDir: `dist/dist-818back-${VITE_AppType}-${mode}`,
+      outDir: `dist/dist-lifePaymentBack-${VITE_AppType}-${mode}`,
     },
     optimizeDeps: {
       include: [

@@ -1,7 +1,7 @@
 <template>
   <LoadingLayout :loading="state.loading">
     <AppContainer>
-      <ProTableV2 v-bind="proTableProps" :columns="userColumns" :operationBtns="userOperationBtns">
+      <ProTableV2 v-bind="proTableProps" :columns="column" :operationBtns="operationBtns">
       </ProTableV2>
     </AppContainer>
     <LifePaymentUserDetailDialog v-bind="dialogProps" />
@@ -17,19 +17,19 @@ import {
   useTable,
   useFormDialog,
 } from '@bole-core/components';
-import { useAccess, useGroupColumns, useGroupOperationBtns } from '@/hooks';
+import { useAccess } from '@/hooks';
 import * as lifePayServices from '@/services/api/LifePay';
 import { OrderInputType } from '@bole-core/core';
 import { omitByFalse } from '@/utils';
 import _ from 'lodash';
-import LifePaymentUserDetailDialog from './LifePaymentUserDetailDialog.vue';
+import LifePaymentUserDetailDialog from './components/LifePaymentUserDetailDialog.vue';
 
 defineOptions({
-  name: 'LifePaymentUserManageView',
+  name: 'LifePaymentUserManage',
 });
 
 const operationBtnMap: Record<string, OperationBtnType> = {
-  'user-detailBtn': {
+  detailBtn: {
     emits: { onClick: (role) => openDialog(role) },
   },
 };
@@ -37,9 +37,6 @@ const operationBtnMap: Record<string, OperationBtnType> = {
 const { column, operationBtns } = useAccess({
   operationBtnMap,
 });
-
-const [userColumns] = useGroupColumns(column, ['user-']);
-const [userOperationBtns] = useGroupOperationBtns(operationBtns, ['user-']);
 
 const BaseState = {
   loading: true,

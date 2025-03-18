@@ -51,12 +51,11 @@ import {
 } from '@bole-core/components';
 import { useAccess } from '@/hooks';
 import * as userRoleServices from '@/services/api/UserRole';
-import * as userServices from '@/services/api/User';
+// import * as userServices from '@/services/api/User';
 import * as accountServices from '@/services/api/Account';
 import { Message, OrderInputType } from '@bole-core/core';
-import AddOrEditAccountDialog from './components/AddOrEditAccountDialog.vue';
-import DialogAuthorize from './components/dialogAuthorize.vue';
-import TencentUserDetailDialog from './components/TencentUserDetailDialog.vue';
+import AddOrEditAccountDialog from '../Permission/components/AddOrEditAccountDialog.vue';
+import DialogAuthorize from '../Permission/components/dialogAuthorize.vue';
 
 defineOptions({
   name: 'AccountManage',
@@ -160,20 +159,6 @@ const { dialogProps, handleAdd, handleEdit, editForm, dialogState } = useFormDia
   },
 });
 
-const {
-  dialogProps: dialogTencentProps,
-  handleEdit: handleTencentUser,
-  editForm: tencentForm,
-  dialogState: dialogTencentState,
-} = useFormDialog({
-  onConfirm: handleSetTencentUser,
-  defaultFormParams: {
-    tencentUserId: '',
-    userId: '',
-    remark: '',
-  },
-});
-
 async function handleAddOrEdit() {
   const isEdit = editForm.id;
   try {
@@ -203,17 +188,17 @@ async function handleAddOrEdit() {
 }
 
 async function userEnableOrForbid(row: API.UserDto) {
-  try {
-    await Message.tipMessage(`是否${row.isLocked ? '启用' : '禁用'}用户`);
-    let res = await userServices.userEnableOrForbid({
-      id: row.id,
-    });
-    if (res) {
-      Message.successMessage('操作成功');
-      getList(paginationState.pageIndex);
-      return !!res;
-    }
-  } catch (error) {}
+  // try {
+  //   await Message.tipMessage(`是否${row.isLocked ? '启用' : '禁用'}用户`);
+  //   let res = await userServices.userEnableOrForbid({
+  //     id: row.id,
+  //   });
+  //   if (res) {
+  //     Message.successMessage('操作成功');
+  //     getList(paginationState.pageIndex);
+  //     return !!res;
+  //   }
+  // } catch (error) {}
 }
 
 async function handleDeleteUser(row: API.UserDto) {

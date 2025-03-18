@@ -106,3 +106,12 @@ export function filterCN(str: string) {
 export function filterNumbersFromString(str: string) {
   return str.replace(/\D/g, '');
 }
+
+export function formatRoleName(roleName: string) {
+  let lastUnderscoreIndex = roleName.lastIndexOf('_');
+
+  if (lastUnderscoreIndex !== -1) {
+    roleName = roleName.substring(0, lastUnderscoreIndex);
+  }
+  return roleName;
+}

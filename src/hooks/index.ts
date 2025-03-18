@@ -7,3 +7,6 @@ export * from './useEvent';
 export * from './area';
 export * from './useUser';
 export * from './help';
+export * from './useOpenLogHooks';
+export * from './lifePay';
+export * from './log';
